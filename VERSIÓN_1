@@ -1,0 +1,90 @@
+create database Auto_Smart_Parking;
+
+use Auto_Smart_Parking;
+
+create table Tipo_documento (
+Iddocumento int primary key  auto_increment,
+Tipo_documento varchar(30) not null);
+insert into Tipo_documento (Tipo_documento) values ('Cedula de Ciudadania'),('Tarjeta de Identidad'),('Cedula de Extranjeria'),('Pasaporte');
+
+create table Rol (
+IdRol int primary key auto_increment,
+Tipo_Rol varchar (13) not null);
+
+insert into rol (Tipo_Rol) values ('administrador'),('usuario'),('cliente');
+
+
+create table Cupo(
+IdCupo int primary key auto_increment,
+No_de_Esp int(10),
+Disponible char(1));
+
+insert into Cupo (No_de_Esp,Disponible) values (1,'S');
+
+
+create table Tipo_Vehiculo (
+IdTipo_Vehiculo int primary key auto_increment,
+Descripcion varchar(9));
+
+insert into Tipo_Vehiculo (Descripcion) values ('automovil'),('moto'),('bicicleta');
+
+
+create table Vehiculo (
+IdVehiculo int primary key auto_increment,
+placa varchar (6),
+marca varchar(45),
+modelo int(4),
+color varchar(45),
+IdTipo_Vehiculo int not null,
+foreign key(IdTipo_Vehiculo) REFERENCES Tipo_Vehiculo (IdTipo_Vehiculo));
+
+insert into Vehiculo (placa,marca,modelo,color,IdTipo_Vehiculo) values ('JEP950','RENAULT',2018,'GRIS',1);
+
+
+create table Parqueadero(
+IdParqueadero int primary key auto_increment,
+Nombre varchar (20),
+Direccion varchar(30),
+Telefono int(10),
+IdCupo int not null,
+FOREIGN KEY(IdCupo) REFERENCES Cupo (IdCupo));
+
+insert into Parqueadero (Nombre,Direccion,Telefono,IdCupo) values ('BARRIO COLOMBIA','Calle 10',2286986,1);
+
+
+create table Usuario (
+IdUsuario int primary key not null auto_increment,
+IdRol int not null,
+Iddocumento int not null,
+Documento int(11) not null,
+Nombre varchar(45),
+Apellido varchar(45),
+Telefono int(10),
+Correo varchar(45),
+Direccion varchar(50),
+Genero char (1),
+Nombre_Usuario varchar (10),
+Contraseña varchar(100),
+IdVehiculo int not null,
+IdParqueadero int not null,
+FOREIGN KEY(IdRol) REFERENCES Rol (IdRol),
+FOREIGN KEY(IdParqueadero) REFERENCES Parqueadero (IdParqueadero),
+FOREIGN KEY(Iddocumento) REFERENCES Tipo_documento (Iddocumento),
+FOREIGN KEY(IdVehiculo) REFERENCES Vehiculo (IdVehiculo));
+
+insert into Usuario (IdRol,Iddocumento,Documento,Nombre,Apellido,Telefono,Correo,Direccion,Genero,Nombre_Usuario,Contraseña,IdVehiculo,IdParqueadero)
+values (1,1,1000617401,'Oscar','Arevalo','2216386','oskararevalo.930@gmail.com','Calle 110','M','Oskar930','123oscar',1,1);
+
+insert into Usuario (IdRol,Iddocumento,Documento,Nombre,Apellido,Telefono,Correo,Direccion,Genero,Nombre_Usuario,Contraseña,parqueaderoIdParqueadero,IdVehiculo)
+values (2,1,52930487,'Cesar','Cesedes','3316386','cesar321@gmail.com','Calle 120','M','Cesar123','123cesar',1,2); 
+
+create table Control_Registro (
+IdControl_Registro int primary key auto_increment,
+IdUsuario int not null,
+IdParqueadero int not null,
+FechaEntrada Datetime (6),
+FechaSalida Datetime (6),	
+FOREIGN KEY(IdUsuario) REFERENCES Usuario (IdUsuario),
+FOREIGN KEY(IdParqueadero) REFERENCES Parqueadero (IdParqueadero));
+
+insert into Control_Registro (IdUsuario,IdParqueadero,FechaEntrada,FechaSalida) values (1,1,'2018-12-24 06:10:15','2018-12-24 17:10:15');
